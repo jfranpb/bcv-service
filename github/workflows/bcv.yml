@@ -3,7 +3,7 @@ name: Actualizar tasa BCV
 on:
   schedule:
     - cron: "0 8 * * 1-5"   # 8:00 UTC = 4:00 AM Venezuela, solo Lunes-Viernes
-  workflow_dispatch:         # Permite ejecutarlo manualmente desde GitHub
+  workflow_dispatch:
 
 jobs:
   actualizar:
@@ -15,7 +15,8 @@ jobs:
 
       - name: Descargar JSON del BCV
         run: |
-          curl -s https://www.bcv.org.ve/sites/default/files/tasas.json -o public/bcv.json
+          mkdir -p public
+          curl -k -s https://www.bcv.org.ve/sites/default/files/tasas.json -o public/bcv.json
 
       - name: Commit y push si hubo cambios
         run: |
