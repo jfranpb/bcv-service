@@ -13,12 +13,26 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Descargar JSON del BCV
+      - name: Descargar página del BCV
         run: |
           mkdir -p public
-          curl -k -s https://www.bcv.org.ve/sites/default/files/tasas.json -o public/bcv.json
-          echo "Contenido descargado:"
-          cat public/bcv.json
+          curl -k -s https://www.bcv.org.ve/ -o bcv.html
+          echo "Página descargada"
+
+      - name: Extraer tasa USD del HTML
+        run: |
+          # Buscar la línea donde aparece la tasa oficial
+          TASA=$(grep -oP '(?<=USD</span>\s*<span class="centrado">)[0-9,]+' bcv.html | head -n 1)
+
+          # Si no se encontró nada, usar 0,00
+          if [ -z "$TASA" ]; then
+            TASA="0,00"
+          fi
+
+          echo "Tasa encontrada: $TASA"
+
+          # Crear JSON
+          echo "{\"USD\": \"$TASA\"}" > public/bcv.json
 
       - name: Commit y push si hubo cambios
         run: |
