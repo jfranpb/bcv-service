@@ -1,6 +1,0 @@
-- name: Descargar JSON del BCV
-  run: |
-    mkdir -p public
-    curl -k -s https://www.bcv.org.ve/sites/default/files/tasas.json -o public/bcv.json
-    echo "Contenido descargado:"
-    cat public/bcv.json
