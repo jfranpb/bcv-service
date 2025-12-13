@@ -1,0 +1,29 @@
+name: Actualizar tasa BCV
+
+on:
+  schedule:
+    - cron: "0 8 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Descargar JSON del BCV
+        run: |
+          mkdir -p public
+          curl -k -s https://www.bcv.org.ve/sites/default/files/tasas.json -o public/bcv.json
+          echo "Contenido descargado:"
+          cat public/bcv.json
+
+      - name: Commit y push si hubo cambios
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add public/bcv.json
+          git diff --quiet && echo "Sin cambios" || git commit -m "Actualización automática BCV"
+          git push
