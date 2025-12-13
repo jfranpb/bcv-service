@@ -1,12 +1,10 @@
 export default async function handler(req, res) {
   try {
-    const response = await fetch(
-      "https://bcv-service-qtt7uxmwf-jose-francisco-perez-bernals-projects.vercel.app/bcv.json"
-    );
+    const response = await fetch("https://bcv-service.vercel.app/bcv.json");
 
     const data = await response.json();
 
-    const rawRate = data.USD; // Ej: "36,45"
+    const rawRate = data.USD;
 
     if (!rawRate) {
       return res.status(500).json({
